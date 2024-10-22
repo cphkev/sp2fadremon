@@ -76,5 +76,27 @@ public class CardDAO implements IDAO<Card> {
         }
     }
 
+    public Card getByRarity(String rarity) {
+        try (var em = emf.createEntityManager()) {
+            return em.createQuery("SELECT c FROM Card c WHERE c.rarity = :rarity", Card.class).setParameter("rarity", rarity).getSingleResult();
+        }
+    }
 
+    public Card getByMinPrice(int price) {
+        try (var em = emf.createEntityManager()) {
+            return em.createQuery("SELECT c FROM Card c WHERE c.price >= :price", Card.class).setParameter("price", price).getSingleResult();
+        }
+    }
+
+    public Card getByMaxPrice(int price) {
+        try (var em = emf.createEntityManager()) {
+            return em.createQuery("SELECT c FROM Card c WHERE c.price <= :price", Card.class).setParameter("price", price).getSingleResult();
+        }
+    }
+
+    public Card getByMinAndMaxPrice(int minPrice, int maxPrice) {
+        try (var em = emf.createEntityManager()) {
+            return em.createQuery("SELECT c FROM Card c WHERE c.price >= :minPrice AND c.price <= :maxPrice", Card.class).setParameter("minPrice", minPrice).setParameter("maxPrice", maxPrice).getSingleResult();
+        }
+    }
 }
