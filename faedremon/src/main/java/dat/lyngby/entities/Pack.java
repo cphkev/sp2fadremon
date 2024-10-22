@@ -1,5 +1,6 @@
 package dat.lyngby.entities;
 
+import dat.lyngby.dtos.PackDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,5 +25,12 @@ public class Pack {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Card>cards;
+
+
+    public Pack(PackDTO packDTO) {
+        this.id = packDTO.getId();
+        this.name = packDTO.getName();
+        this.description = packDTO.getDescription();
+    }
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardDTO {
-
+    private Integer id;
     private String cardName;
     private String rarity;
     private boolean isShiny;
