@@ -60,4 +60,14 @@ public class Utils {
             return "{\"error\": \"Could not convert  message to JSON\"}";
         }
     }
+    public static String convertErrorToJson(String message) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("error", message);  // Put the message in the map
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(errorMap);  // Convert the map to JSON
+        } catch (Exception e) {
+            return "{\"error\": \"Could not convert error message to JSON\"}";
+        }
+    }
 }

@@ -16,10 +16,12 @@ public class Card {
     private String cardName;
     private String description;
     private String rarity;
+    private int price;
     private boolean isShiny;
     private int attack;
     private int defense;
     private int chance;
     private int aura;
+    private int evolutionStage;
 
 }
