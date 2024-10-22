@@ -6,6 +6,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import dat.lyngby.entities.Card;
+import dat.lyngby.entities.Pack;
+import dat.lyngby.entities.Inventory;
+import dat.lyngby.security.entities.User;
+import dat.lyngby.security.entities.Role;
 
 import java.util.Properties;
 
@@ -39,6 +44,11 @@ public class HibernateConfig {
 
     // TODO: IMPORTANT: Add Entity classes here for them to be registered with Hibernate
     private static void getAnnotationConfiguration(Configuration configuration) {
+        configuration.addAnnotatedClass(Card.class);
+        configuration.addAnnotatedClass(Pack.class);
+        configuration.addAnnotatedClass(Inventory.class);
+        configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(Role.class);
 
     }
 
@@ -95,7 +105,7 @@ public class HibernateConfig {
     }
 
     private static Properties setDevProperties(Properties props) {
-        String DBName = "hotel";
+        String DBName = "sp2faedremon";
         props.put("hibernate.connection.url", "jdbc:postgresql://localhost:5432/" + DBName);
         props.put("hibernate.connection.username", "postgres");
         props.put("hibernate.connection.password", "postgres");
