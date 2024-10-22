@@ -28,11 +28,11 @@ public class CardDTO {
         this.isShiny = card.isShiny();
         this.attack = card.getAttack();
         this.defense = card.getDefense();
-        //this.price = card.getPrice();
+        this.price = card.getPrice();
         this.chance = card.getChance();
         this.description = card.getDescription();
         this.aura = card.getAura();
-        //this.evolutionStage = card.getEvolutionStage();
+        this.evolutionStage = card.getEvolutionStage();
     }
 
     public static List<CardDTO> toCardDTOList(List<Card> cards) {
