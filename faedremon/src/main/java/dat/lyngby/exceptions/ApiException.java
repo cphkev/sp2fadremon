@@ -1,7 +1,7 @@
 package dat.lyngby.exceptions;
 
 
-public class ApiException extends Exception{
+public class ApiException extends RuntimeException{
 
     private final int statusCode;
 
