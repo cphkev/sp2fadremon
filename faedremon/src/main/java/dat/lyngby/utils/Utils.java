@@ -13,7 +13,7 @@ package dat.lyngby.utils;
 //import java.util.HashMap;
 //import java.util.Map;
 //import java.util.Properties;
-//
+
 ///**
 // * Purpose: Utility class to read properties from a file
 // * Author: Thomas Hartmann
