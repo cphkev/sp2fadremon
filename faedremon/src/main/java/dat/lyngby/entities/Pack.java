@@ -8,18 +8,14 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Card {
+public class Pack {
+
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private int id;
 
-    private String cardName;
+    private String name;
+
     private String description;
-    private String rarity;
-    private boolean isShiny;
-    private int attack;
-    private int defense;
-    private int chance;
-    private int aura;
 
 }
