@@ -1,10 +1,9 @@
 package dat.lyngby.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.Set;
 
 /**
  * @author Rouvi
@@ -19,6 +18,11 @@ public class Pack {
     private int id;
 
     private String name;
+
     private String description;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Card>cards;
 
 }

@@ -22,6 +22,7 @@ public class Populate {
        return null;
     }
 
+
     @NotNull
     private static Set<Card> getMagnusCards() {
        return null;
