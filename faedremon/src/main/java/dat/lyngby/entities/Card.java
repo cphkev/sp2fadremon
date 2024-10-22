@@ -1,6 +1,7 @@
 package dat.lyngby.entities;
 
 
+import dat.lyngby.dtos.CardDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -34,4 +35,21 @@ public class Card {
             joinColumns = @JoinColumn(name = "card_id"),
             inverseJoinColumns = @JoinColumn(name = "inventory_id"))
     private Inventory inventory;
+
+
+
+
+    public Card(CardDTO cardDTO) {
+        this.id = cardDTO.getId();
+        this.cardName = cardDTO.getCardName();
+        this.description = cardDTO.getDescription();
+        this.rarity = cardDTO.getRarity();
+        this.price = cardDTO.getPrice();
+        this.isShiny = cardDTO.isShiny();
+        this.attack = cardDTO.getAttack();
+        this.defense = cardDTO.getDefense();
+        this.chance = cardDTO.getChance();
+        this.aura = cardDTO.getAura();
+        this.evolutionStage = cardDTO.getEvolutionStage();
+    }
 }

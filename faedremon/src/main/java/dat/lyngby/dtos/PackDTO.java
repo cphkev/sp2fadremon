@@ -12,6 +12,7 @@ import java.util.Set;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PackDTO {
+    private Integer id;
     private String name;
     private String description;
     private Set<CardDTO> cards;
@@ -22,7 +23,10 @@ public class PackDTO {
         //this.cards = pack.getCards().stream().map(CardDTO::new).collect(Collectors.toSet());
     }
 
-    public static List<PackDTO>toPackDTOList(List<Pack> packs) {
+    public static List<PackDTO> toPackDTOList(List<Pack> packs) {
         return packs.stream().map(PackDTO::new).toList();
     }
+
+
+
 }

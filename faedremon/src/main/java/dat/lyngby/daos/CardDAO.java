@@ -1,8 +1,11 @@
 package dat.lyngby.daos;
 
+import dat.lyngby.dtos.CardDTO;
 import dat.lyngby.entities.Card;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -12,50 +15,61 @@ import java.util.List;
  *
  * @author: Kevin Løvstad Schou
  */
-public class CardDAO implements IDAO<Card> {
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+public class CardDAO implements IDAO<CardDTO,Integer> {
+    private static CardDAO instance;
 
-    private final EntityManagerFactory emf;
+    private static EntityManagerFactory emf;
 
-    public CardDAO(EntityManagerFactory emf) {
-        this.emf = emf;
+  public static CardDAO getInstance(EntityManagerFactory factory) {
+        if (instance == null) {
+            instance = new CardDAO();
+            emf = factory;
+        }
+        return instance;
     }
 
 
     @Override
-    public Card create(Card card) {
+    public CardDTO create(CardDTO cardDTO) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
+            Card card = new Card(cardDTO);
             em.persist(card);
             em.getTransaction().commit();
+            return new CardDTO(card);
         }
-        return card;
+
     }
 
     @Override
-    public Card getById(int id) {
+    public CardDTO getById(int id) {
         try (EntityManager em = emf.createEntityManager()) {
-            return em.find(Card.class, id);
+            Card card = em.find(Card.class, id);
+            return new CardDTO(card);
         }
     }
 
     @Override
-    public Card update(Card card, Card updateCard) {
+    public CardDTO update(Integer integer, CardDTO cardDTO) {
         try (var em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            card.setCardName(updateCard.getCardName());
-            card.setDescription(updateCard.getDescription());
-            card.setRarity(updateCard.getRarity());
-            card.setShiny(updateCard.isShiny());
-            card.setPrice(updateCard.getPrice());
-            card.setAttack(updateCard.getAttack());
-            card.setDefense(updateCard.getDefense());
-            card.setChance(updateCard.getChance());
-            card.setAura(updateCard.getAura());
-            card.setEvolutionStage(updateCard.getEvolutionStage());
-            em.merge(card);
+            Card card = em.find(Card.class, integer);
+            card.setCardName(cardDTO.getCardName());
+            card.setDescription(cardDTO.getDescription());
+            card.setRarity(cardDTO.getRarity());
+            card.setPrice(cardDTO.getPrice());
+            card.setShiny(cardDTO.isShiny());
+            card.setAttack(cardDTO.getAttack());
+            card.setDefense(cardDTO.getDefense());
+            card.setChance(cardDTO.getChance());
+            card.setAura(cardDTO.getAura());
+            card.setEvolutionStage(cardDTO.getEvolutionStage());
+           Card mergedCard = em.merge(card);
             em.getTransaction().commit();
+            return mergedCard != null ? new CardDTO(mergedCard) : null;
         }
-        return card;
+
     }
 
     @Override
@@ -70,9 +84,10 @@ public class CardDAO implements IDAO<Card> {
     }
 
     @Override
-    public List<Card> getAll() {
+    public List<CardDTO> getAll() {
         try (var em = emf.createEntityManager()) {
-            return em.createQuery("SELECT c FROM Card c", Card.class).getResultList();
+           TypedQuery<CardDTO> query = em.createQuery("SELECT new dat.lyngby.dtos.CardDTO(c) FROM Card c", CardDTO.class);
+            return query.getResultList();
         }
     }
 

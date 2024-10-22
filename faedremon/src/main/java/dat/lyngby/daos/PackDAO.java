@@ -1,8 +1,12 @@
 package dat.lyngby.daos;
 
+import dat.lyngby.dtos.CardDTO;
+import dat.lyngby.dtos.PackDTO;
 import dat.lyngby.entities.Pack;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -11,40 +15,51 @@ import java.util.List;
  *
  * @author: Kevin Løvstad Schou
  */
-public class PackDAO implements IDAO<Pack>{
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+public class PackDAO implements IDAO<PackDTO,Integer> {
+    private static PackDAO instance;
 
-    private final EntityManagerFactory emf;
+    private static EntityManagerFactory emf;
 
-    public PackDAO(EntityManagerFactory emf) {
-        this.emf = emf;
+    public static PackDAO getInstance(EntityManagerFactory factory) {
+        if (instance == null) {
+            instance = new PackDAO();
+            emf = factory;
+        }
+        return instance;
     }
+
     @Override
-    public Pack create(Pack pack) {
+    public PackDTO create(PackDTO packDTO) {
         try(EntityManager em = emf.createEntityManager()){
             em.getTransaction().begin();
+            Pack pack = new Pack(packDTO);
             em.persist(pack);
             em.getTransaction().commit();
-        }
-        return pack;
-    }
-
-    @Override
-    public Pack getById(int id) {
-        try(EntityManager em = emf.createEntityManager()){
-            return em.find(Pack.class, id);
+            return new PackDTO(pack);
         }
     }
 
     @Override
-    public Pack update(Pack pack, Pack updatePack) {
+    public PackDTO getById(int id) {
+        try(var em = emf.createEntityManager()){
+            Pack pack = em.find(Pack.class, id);
+            return new PackDTO(pack);
+        }
+    }
+
+    @Override
+    public PackDTO update(Integer integer, PackDTO packDTO) {
         try(var em = emf.createEntityManager()){
             em.getTransaction().begin();
-            pack.setName(updatePack.getName());
-            pack.setDescription(updatePack.getDescription());
-            em.merge(pack);
+            Pack pack = em.find(Pack.class, integer);
+            pack.setName(packDTO.getName());
+            pack.setDescription(packDTO.getDescription());
+            Pack mergedPack = em.merge(pack);
             em.getTransaction().commit();
+            return mergedPack != null ? new PackDTO(mergedPack) : null;
         }
-        return pack;
+
     }
 
     @Override
@@ -58,9 +73,10 @@ public class PackDAO implements IDAO<Pack>{
     }
 
     @Override
-    public List<Pack> getAll() {
+    public List<PackDTO> getAll() {
         try(var em = emf.createEntityManager()){
-            return em.createQuery("SELECT p FROM Pack p", Pack.class).getResultList();
+            TypedQuery<PackDTO> query = em.createQuery("SELECT new dat.lyngby.dtos.PackDTO(p) FROM Pack p", PackDTO.class);
+            return query.getResultList();
         }
     }
 }
