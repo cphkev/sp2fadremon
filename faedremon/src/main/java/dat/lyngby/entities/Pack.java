@@ -3,6 +3,7 @@ package dat.lyngby.entities;
 import dat.lyngby.dtos.PackDTO;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
@@ -11,6 +12,7 @@ import java.util.Set;
  */
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "packs")
 public class Pack {
@@ -31,6 +33,13 @@ public class Pack {
         this.id = packDTO.getId();
         this.name = packDTO.getName();
         this.description = packDTO.getDescription();
+    }
+
+
+    public Pack(String name, String description, Set<Card> cards) {
+        this.name = name;
+        this.description = description;
+        this.cards = cards;
     }
 
 }

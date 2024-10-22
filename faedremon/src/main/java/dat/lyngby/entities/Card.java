@@ -4,9 +4,13 @@ package dat.lyngby.entities;
 import dat.lyngby.dtos.CardDTO;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "cards")
 public class Card {
     @Id
@@ -24,11 +28,11 @@ public class Card {
     private int aura;
     private int evolutionStage;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "pack_cards",
             joinColumns = @JoinColumn(name = "card_id"),
             inverseJoinColumns = @JoinColumn(name = "pack_id"))
-    private Pack pack;
+    private Set<Pack> packs;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "inventory_cards",
@@ -36,8 +40,20 @@ public class Card {
             inverseJoinColumns = @JoinColumn(name = "inventory_id"))
     private Inventory inventory;
 
-
-
+    public Card(String cardName, String description, String rarity, int price, boolean isShiny, int attack, int defense, int chance, int aura, int evolutionStage, Set<Pack> pack, Inventory inventory) {
+        this.cardName = cardName;
+        this.description = description;
+        this.rarity = rarity;
+        this.price = price;
+        this.isShiny = isShiny;
+        this.attack = attack;
+        this.defense = defense;
+        this.chance = chance;
+        this.aura = aura;
+        this.evolutionStage = evolutionStage;
+        this.packs = pack;
+        this.inventory = inventory;
+    }
 
     public Card(CardDTO cardDTO) {
         this.id = cardDTO.getId();
