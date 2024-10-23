@@ -18,6 +18,7 @@ public class PackDTO {
     private Set<CardDTO> cards;
 
     public PackDTO(Pack pack) {
+        this.id = pack.getId();
         this.name = pack.getName();
         this.description = pack.getDescription();
         //this.cards = pack.getCards().stream().map(CardDTO::new).collect(Collectors.toSet());

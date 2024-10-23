@@ -64,13 +64,30 @@ public class PackDAO implements IDAO<PackDTO,Integer> {
 
     @Override
     public void delete(int id) {
-        try(var em = emf.createEntityManager()){
+//        try (var em = emf.createEntityManager()) {
+//            em.getTransaction().begin();
+//            Pack pack = em.find(Pack.class, id);
+//            if (pack != null) {
+//                // Remove references to the Pack entity from the Card entities
+//                pack.getCards().forEach(card -> {
+//                    card.getPacks().remove(pack);
+//                    em.merge(card); // Update the Card entity to reflect the changes
+//                });
+//                em.remove(pack);
+//            }
+//            em.getTransaction().commit();
+
+        try (var em = emf.createEntityManager()) {
             em.getTransaction().begin();
             Pack pack = em.find(Pack.class, id);
-            em.remove(pack);
+            if (pack != null) {
+                em.remove(pack);
+            }
             em.getTransaction().commit();
         }
+        //Virker ikke da man skal slette fra join table først
     }
+
 
     @Override
     public List<PackDTO> getAll() {

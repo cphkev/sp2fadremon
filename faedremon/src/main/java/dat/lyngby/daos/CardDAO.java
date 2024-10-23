@@ -97,21 +97,45 @@ public class CardDAO implements IDAO<CardDTO,Integer> {
         }
     }
 
-    public Card getByMinPrice(int price) {
-        try (var em = emf.createEntityManager()) {
-            return em.createQuery("SELECT c FROM Card c WHERE c.price >= :price", Card.class).setParameter("price", price).getSingleResult();
-        }
+//    public Card getByMinPrice(int price) {
+//        try (var em = emf.createEntityManager()) {
+//            return em.createQuery("SELECT c FROM Card c WHERE c.price >= :price", Card.class).setParameter("price", price).getSingleResult();
+//        }
+public List<Card> getByMinPrice(int minPrice) {
+    try (var em = emf.createEntityManager()) {
+        String jpql = "SELECT c FROM Card c WHERE c.price >= :minPrice";
+        return em.createQuery(jpql, Card.class)
+                .setParameter("minPrice", minPrice)
+                .getResultList();
+    }
     }
 
-    public Card getByMaxPrice(int price) {
-        try (var em = emf.createEntityManager()) {
-            return em.createQuery("SELECT c FROM Card c WHERE c.price <= :price", Card.class).setParameter("price", price).getSingleResult();
-        }
+//    public Card getByMaxPrice(int price) {
+//        try (var em = emf.createEntityManager()) {
+//            return em.createQuery("SELECT c FROM Card c WHERE c.price <= :price", Card.class).setParameter("price", price).getSingleResult();
+//        }
+public List<Card> getByMaxPrice(int maxPrice) {
+    try (var em = emf.createEntityManager()) {
+        String jpql = "SELECT c FROM Card c WHERE c.price <= :maxPrice";
+        return em.createQuery(jpql, Card.class)
+                .setParameter("maxPrice", maxPrice)
+                .getResultList();
+    }
     }
 
-    public Card getByMinAndMaxPrice(int minPrice, int maxPrice) {
+//    public Card getByMinAndMaxPrice(int minPrice, int maxPrice) {
+//        try (var em = emf.createEntityManager()) {
+//            return em.createQuery("SELECT c FROM Card c WHERE c.price >= :minPrice AND c.price <= :maxPrice", Card.class).setParameter("minPrice", minPrice).setParameter("maxPrice", maxPrice).getSingleResult();
+//        }
+//    }
+
+    public List<Card> getByMinAndMaxPrice(int minPrice, int maxPrice) {
         try (var em = emf.createEntityManager()) {
-            return em.createQuery("SELECT c FROM Card c WHERE c.price >= :minPrice AND c.price <= :maxPrice", Card.class).setParameter("minPrice", minPrice).setParameter("maxPrice", maxPrice).getSingleResult();
+            String jpql = "SELECT c FROM Card c WHERE c.price >= :minPrice AND c.price <= :maxPrice";
+            return em.createQuery(jpql, Card.class)
+                    .setParameter("minPrice", minPrice)
+                    .setParameter("maxPrice", maxPrice)
+                    .getResultList();
         }
     }
 }
