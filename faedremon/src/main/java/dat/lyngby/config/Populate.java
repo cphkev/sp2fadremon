@@ -47,8 +47,6 @@ public class Populate {
             }
 
             em.persist(jonesPack);
-            //Hihi ups
-            deleteTableIfExists(em, "pack_cards");
             em.getTransaction().commit();
 
         }
@@ -63,15 +61,6 @@ public class Populate {
             Card[] cardArray = {c1, c2, c3};
             return Set.of(cardArray);
     }
-
-
-    private static void deleteTableIfExists(EntityManager em, String tableName) {
-        //Hihi lad os slette den når vi fikser det
-        String sql = "DROP TABLE IF EXISTS " + tableName;
-        Query query = em.createNativeQuery(sql);
-        query.executeUpdate();
-    }
-
 
 //    @NotNull
 //    private static Set<Card> getMagnusCards() {

@@ -28,10 +28,7 @@ public class Card {
     private int aura;
     private int evolutionStage;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "pack_cards",
-            joinColumns = @JoinColumn(name = "card_id"),
-            inverseJoinColumns = @JoinColumn(name = "pack_id"))
+    @ManyToMany(mappedBy = "cards",fetch = FetchType.EAGER)
     private Set<Pack> packs;
 
     @ManyToOne(fetch = FetchType.EAGER)
