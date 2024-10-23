@@ -23,6 +23,7 @@ public class CardDTO {
     private int evolutionStage;
 
     public CardDTO(Card card) {
+        this.id = card.getId();
         this.cardName = card.getCardName();
         this.rarity = card.getRarity();
         this.isShiny = card.isShiny();
