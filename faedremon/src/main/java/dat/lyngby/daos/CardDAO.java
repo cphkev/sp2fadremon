@@ -1,7 +1,9 @@
 package dat.lyngby.daos;
 
 import dat.lyngby.dtos.CardDTO;
+import dat.lyngby.dtos.PackDTO;
 import dat.lyngby.entities.Card;
+import dat.lyngby.entities.Pack;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
@@ -16,15 +18,16 @@ import java.util.List;
  * @author: Kevin Løvstad Schou
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class CardDAO implements IDAO<CardDTO,Integer> {
+public class CardDAO implements IDAO<CardDTO, Integer> {
     private static CardDAO instance;
 
     private static EntityManagerFactory emf;
 
-  public static CardDAO getInstance(EntityManagerFactory factory) {
+    public static CardDAO getInstance(EntityManagerFactory factory) {
         if (instance == null) {
-            instance = new CardDAO();
             emf = factory;
+            instance = new CardDAO();
+
         }
         return instance;
     }
@@ -65,7 +68,7 @@ public class CardDAO implements IDAO<CardDTO,Integer> {
             card.setChance(cardDTO.getChance());
             card.setAura(cardDTO.getAura());
             card.setEvolutionStage(cardDTO.getEvolutionStage());
-           Card mergedCard = em.merge(card);
+            Card mergedCard = em.merge(card);
             em.getTransaction().commit();
             return mergedCard != null ? new CardDTO(mergedCard) : null;
         }
@@ -86,10 +89,29 @@ public class CardDAO implements IDAO<CardDTO,Integer> {
     @Override
     public List<CardDTO> getAll() {
         try (var em = emf.createEntityManager()) {
-           TypedQuery<CardDTO> query = em.createQuery("SELECT new dat.lyngby.dtos.CardDTO(c) FROM Card c", CardDTO.class);
+            TypedQuery<CardDTO> query = em.createQuery("SELECT new dat.lyngby.dtos.CardDTO(c) FROM Card c", CardDTO.class);
             return query.getResultList();
         }
     }
+
+
+    public PackDTO addCardToPack(int packId, CardDTO cardDTO) {
+        try (var em = emf.createEntityManager()) {
+            em.getTransaction().begin();
+            Card card = new Card(cardDTO);
+            Pack pack = em.find(Pack.class, packId);
+            pack.addCard(card);
+            em.persist(card);
+            Pack mergedPack = em.merge(pack);
+            em.getTransaction().commit();
+            return new PackDTO(mergedPack);
+        }
+    }
+    
+
+
+
+
 
     public Card getByRarity(String rarity) {
         try (var em = emf.createEntityManager()) {
