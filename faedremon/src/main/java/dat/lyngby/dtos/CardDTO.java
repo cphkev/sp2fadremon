@@ -4,10 +4,12 @@ package dat.lyngby.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dat.lyngby.entities.Card;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardDTO {
     private Integer id;
@@ -36,9 +38,12 @@ public class CardDTO {
         this.evolutionStage = card.getEvolutionStage();
     }
 
+
     public static List<CardDTO> toCardDTOList(List<Card> cards) {
         return List.of(cards.stream().map(CardDTO::new).toArray(CardDTO[]::new));
     }
+
+
 
 
 }

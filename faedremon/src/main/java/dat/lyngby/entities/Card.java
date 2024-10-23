@@ -55,6 +55,20 @@ public class Card {
         this.inventory = inventory;
     }
 
+    public Card(String cardName, String description, String rarity, int price, boolean isShiny, int attack, int defense, int aura, int evolutionStage, Set<Pack> pack, Inventory inventory) {
+        this.cardName = cardName;
+        this.description = description;
+        this.rarity = rarity;
+        this.price = price;
+        this.isShiny = isShiny;
+        this.attack = attack;
+        this.defense = defense;
+        this.aura = aura;
+        this.evolutionStage = evolutionStage;
+        this.packs = pack;
+        this.inventory = inventory;
+    }
+
     public Card(CardDTO cardDTO) {
         this.id = cardDTO.getId();
         this.cardName = cardDTO.getCardName();
@@ -64,7 +78,7 @@ public class Card {
         this.isShiny = cardDTO.isShiny();
         this.attack = cardDTO.getAttack();
         this.defense = cardDTO.getDefense();
-        this.chance = cardDTO.getChance();
+      this.chance = cardDTO.getChance();
         this.aura = cardDTO.getAura();
         this.evolutionStage = cardDTO.getEvolutionStage();
     }

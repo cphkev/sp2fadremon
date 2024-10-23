@@ -2,6 +2,7 @@ package dat.lyngby.daos;
 
 import dat.lyngby.dtos.CardDTO;
 import dat.lyngby.dtos.PackDTO;
+import dat.lyngby.entities.Card;
 import dat.lyngby.entities.Pack;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -9,17 +10,22 @@ import jakarta.persistence.TypedQuery;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Purpose:
  *
  * @author: Kevin Løvstad Schou
  */
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@NoArgsConstructor(access = lombok.AccessLevel.PUBLIC)
 public class PackDAO implements IDAO<PackDTO,Integer> {
     private static PackDAO instance;
 
     private static EntityManagerFactory emf;
+
+    public PackDAO (EntityManagerFactory emf){
+        PackDAO.emf = emf;
+    }
 
     public static PackDAO getInstance(EntityManagerFactory factory) {
         if (instance == null) {
@@ -95,5 +101,20 @@ public class PackDAO implements IDAO<PackDTO,Integer> {
             TypedQuery<PackDTO> query = em.createQuery("SELECT new dat.lyngby.dtos.PackDTO(p) FROM Pack p", PackDTO.class);
             return query.getResultList();
         }
+    }
+
+
+    public List<Card> getCardsFromPack(int id) {
+        //Vælg packe udfra pack_id
+        //Få alle kort fra packen
+        //Smid kortene i en liste
+        try (var em = emf.createEntityManager()) {
+            String jpql = "SELECT c FROM Pack p JOIN p.cards c WHERE p.id = : packId";
+            return em.createQuery(jpql, Card.class)
+                    .setParameter("packId", id)
+                    .getResultList()
+                    .stream().collect(Collectors.toList());
+        }
+
     }
 }
