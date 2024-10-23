@@ -26,6 +26,11 @@ public class Pack {
 
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "packs_cards",
+            joinColumns = @JoinColumn(name = "pack_id"),
+            inverseJoinColumns = @JoinColumn(name = "card_id")
+    )
     private Set<Card>cards;
 
 
