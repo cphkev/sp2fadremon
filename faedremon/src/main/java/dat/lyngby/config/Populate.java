@@ -6,6 +6,7 @@ import dat.lyngby.dtos.CardDTO;
 import dat.lyngby.entities.Card;
 import dat.lyngby.entities.Inventory;
 import dat.lyngby.entities.Pack;
+import dat.lyngby.security.entities.Role;
 import dat.lyngby.security.entities.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -18,17 +19,22 @@ import java.util.Set;
 public class Populate {
    public static Set<Pack> jonesPack;
    public static Inventory playerInventory;
-    public static void main(String[] args) {
+    public static void Populate() {
 
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
         User user = new User("username1","password1");
+        User adminUser = new User("admin","admin123");
+        Role adminRole = new Role("ADMIN");
+        adminUser.addRole(adminRole);
         Set<Card> jonesCards = getJonesCards();
         CardDAO cardDAO = new CardDAO(emf);
 
 
         try (var em = emf.createEntityManager()) {
             em.getTransaction().begin();
+            em.persist(adminRole);
             em.persist(user);
+            em.persist(adminUser);
             for (Card card : jonesCards) {
                em.persist(card);
             }
