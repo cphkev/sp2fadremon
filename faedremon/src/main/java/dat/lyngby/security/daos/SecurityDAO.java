@@ -12,6 +12,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -81,8 +82,7 @@ public class SecurityDAO implements ISecurityDAO {
     }
 
 
-
-    @Override
+    /*@Override
     public User createUserOG(String username, String password) {
         try (EntityManager em = getEntityManager()) {
             User userEntity = em.find(User.class, username);
@@ -101,6 +101,20 @@ public class SecurityDAO implements ISecurityDAO {
         }catch (Exception e){
             e.printStackTrace();
             throw new ApiException(400, e.getMessage());
+        }
+    }*/
+
+    @Override
+    public User getUserByID(int id) {
+        try (EntityManager em = getEntityManager()) {
+            return em.find(User.class, id);
+        }
+    }
+
+    @Override
+    public List<User> getAll() {
+        try (var em = emf.createEntityManager()) {
+            return em.createQuery("SELECT u FROM User u", User.class).getResultList();
         }
     }
 }
