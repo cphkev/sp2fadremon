@@ -146,4 +146,23 @@ class CardDAOTest {
         assertFalse(cards.isEmpty());
         assertTrue(cards.stream().allMatch(card -> card.getPrice() >= 10 && card.getPrice() <= 50));
     }
+
+
+    @Test
+    void createMaxEnergy() {
+        CardDTO cardDTO = new CardDTO();
+        cardDTO.setId(1);
+        cardDTO.setCardName("Shiny Legendary Card");
+        cardDTO.setDescription("A shiny legendary card.");
+        cardDTO.setRarity("Legendary");
+        cardDTO.setPrice(100);
+        cardDTO.setShiny(true);
+        cardDTO.setAttack(150);
+        cardDTO.setDefense(100);
+        cardDTO.setAura(10);
+        cardDTO.setEvolutionStage(5);
+        CardDTO createdCard = cardDAO.create(cardDTO);
+        assertNotNull(createdCard.getId());
+        assertEquals(1, createdCard.getChance());
+    }
 }
