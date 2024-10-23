@@ -19,7 +19,7 @@ jobs:
           distribution: 'corretto'
 
       - name: Build with Maven
-        working-directory: ./Projekter/sem3/sp2fadremon/faedremon
+        working-directory: faedremon/pom.xml
         run: mvn --batch-mode clean package
 
       - name: Login to Docker Hub
