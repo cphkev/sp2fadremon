@@ -42,4 +42,13 @@ public class Pack {
         this.cards = cards;
     }
 
+
+    public void addCard(Card card){
+        if(card != null) {
+            this.cards.add(card);
+            card.setPacks(Set.of(this));
+        }
+
+    }
+
 }
