@@ -7,7 +7,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.TypedQuery;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
  *
  * @author: Kevin Løvstad Schou
  */
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
+@NoArgsConstructor(access = lombok.AccessLevel.PUBLIC)
 public class CardDAO implements IDAO<CardDTO,Integer> {
     private static CardDAO instance;
 
@@ -29,18 +30,73 @@ public class CardDAO implements IDAO<CardDTO,Integer> {
         return instance;
     }
 
+    public CardDAO (EntityManagerFactory emf){
+        CardDAO.emf = emf;
+    }
+
 
     @Override
     public CardDTO create(CardDTO cardDTO) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
             Card card = new Card(cardDTO);
+//            if (card.isShiny()&&card.getRarity().equals("Common")){
+//                card.setChance(0.3);
+//            } else if (card.isShiny()&&card.getRarity().equals("Rare")) {
+//                card.setChance(0.2);
+//            } else if (card.isShiny()&&card.getRarity().equals("Legendary")){
+//                card.setChance(0.01);
+//            } else if (card.isShiny() == false && card.getRarity().equals("Common")){
+//                card.setChance(0.7);
+//            } else if (card.isShiny() == false && card.getRarity().equals("Rare")){
+//                card.setChance(0.4);
+//            } else if (card.isShiny() == false && card.getRarity().equals("Legendary")){
+//                card.setChance(0.1);
+//            }
             em.persist(card);
             em.getTransaction().commit();
             return new CardDTO(card);
         }
 
     }
+
+//    @Override
+//    public CardDTO create(CardDTO cardDTO) {
+//        try (EntityManager em = emf.createEntityManager()) {
+//            em.getTransaction().begin();
+//
+//            Card card = new Card(cardDTO);
+//
+//            // Set the chance based on rarity and shiny status
+//            String key = card.getRarity() + "_" + card.isShiny();
+//            Integer chance = getChance(key);
+//
+//
+//            if (chance != null) {
+//                card.setChance(chance);
+//            } else {
+//                // Handle unexpected rarity/shiny combination if necessary
+//                throw new IllegalArgumentException("Invalid rarity/shiny combination");
+//            }
+//            em.persist(card);
+//            em.getTransaction().commit();
+//            return new CardDTO(card);
+//        }
+//    }
+//
+//
+//    private Integer getChance(String key) {
+//        Map<String, Integer> chanceMap = new HashMap<>();
+//        chanceMap.put("Common_False", 70); // 70% chance for non-shiny Common
+//        chanceMap.put("Common_True", 30);  // 30% chance for shiny Common
+//        chanceMap.put("Rare_False", 20);   // 20% chance for non-shiny Rare
+//        chanceMap.put("Rare_True", 10);    // 10% chance for shiny Rare
+//        chanceMap.put("Legendary_False", 5); // 5% chance for non-shiny Legendary
+//        chanceMap.put("Legendary_True", 1); // 1% chance for shiny Legendary
+//
+//        return chanceMap.get(key);
+//    }
+
 
     @Override
     public CardDTO getById(int id) {
@@ -110,10 +166,7 @@ public List<Card> getByMinPrice(int minPrice) {
     }
     }
 
-//    public Card getByMaxPrice(int price) {
-//        try (var em = emf.createEntityManager()) {
-//            return em.createQuery("SELECT c FROM Card c WHERE c.price <= :price", Card.class).setParameter("price", price).getSingleResult();
-//        }
+
 public List<Card> getByMaxPrice(int maxPrice) {
     try (var em = emf.createEntityManager()) {
         String jpql = "SELECT c FROM Card c WHERE c.price <= :maxPrice";
@@ -123,11 +176,7 @@ public List<Card> getByMaxPrice(int maxPrice) {
     }
     }
 
-//    public Card getByMinAndMaxPrice(int minPrice, int maxPrice) {
-//        try (var em = emf.createEntityManager()) {
-//            return em.createQuery("SELECT c FROM Card c WHERE c.price >= :minPrice AND c.price <= :maxPrice", Card.class).setParameter("minPrice", minPrice).setParameter("maxPrice", maxPrice).getSingleResult();
-//        }
-//    }
+
 
     public List<Card> getByMinAndMaxPrice(int minPrice, int maxPrice) {
         try (var em = emf.createEntityManager()) {
@@ -138,4 +187,7 @@ public List<Card> getByMaxPrice(int maxPrice) {
                     .getResultList();
         }
     }
+
+
+
 }
