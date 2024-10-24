@@ -3,6 +3,7 @@ package dat.lyngby.daos;
 import dat.lyngby.dtos.CardDTO;
 import dat.lyngby.dtos.PackDTO;
 import dat.lyngby.entities.Card;
+import dat.lyngby.entities.Inventory;
 import dat.lyngby.entities.Pack;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -42,27 +43,41 @@ public class CardDAO implements IDAO<CardDTO, Integer> {
     @Override
     public CardDTO create(CardDTO cardDTO) {
         try (EntityManager em = emf.createEntityManager()) {
+
+            Inventory inventory = cardDTO.getInventory();
+            if (inventory != null) {
+                em.persist(inventory);
+            }
             em.getTransaction().begin();
-            Card card = new Card(cardDTO);
-//            if (card.isShiny()&&card.getRarity().equals("Common")){
-//                card.setChance(0.3);
-//            } else if (card.isShiny()&&card.getRarity().equals("Rare")) {
-//                card.setChance(0.2);
-//            } else if (card.isShiny()&&card.getRarity().equals("Legendary")){
-//                card.setChance(0.01);
-//            } else if (card.isShiny() == false && card.getRarity().equals("Common")){
-//                card.setChance(0.7);
-//            } else if (card.isShiny() == false && card.getRarity().equals("Rare")){
-//                card.setChance(0.4);
-//            } else if (card.isShiny() == false && card.getRarity().equals("Legendary")){
-//                card.setChance(0.1);
-//            }
+            Card card = cardDTO.toEntity();
             em.persist(card);
             em.getTransaction().commit();
             return new CardDTO(card);
         }
-
     }
+//    public CardDTO create(CardDTO cardDTO) {
+//        try (EntityManager em = emf.createEntityManager()) {
+//            em.getTransaction().begin();
+//            Card card = new Card(cardDTO);
+////            if (card.isShiny()&&card.getRarity().equals("Common")){
+////                card.setChance(0.3);
+////            } else if (card.isShiny()&&card.getRarity().equals("Rare")) {
+////                card.setChance(0.2);
+////            } else if (card.isShiny()&&card.getRarity().equals("Legendary")){
+////                card.setChance(0.01);
+////            } else if (card.isShiny() == false && card.getRarity().equals("Common")){
+////                card.setChance(0.7);
+////            } else if (card.isShiny() == false && card.getRarity().equals("Rare")){
+////                card.setChance(0.4);
+////            } else if (card.isShiny() == false && card.getRarity().equals("Legendary")){
+////                card.setChance(0.1);
+////            }
+//            em.persist(card);
+//            em.getTransaction().commit();
+//            return new CardDTO(card);
+//        }
+//
+//    }
 
 //    @Override
 //    public CardDTO create(CardDTO cardDTO) {
@@ -137,8 +152,13 @@ public class CardDAO implements IDAO<CardDTO, Integer> {
         try (var em = emf.createEntityManager()) {
             em.getTransaction().begin();
             Card card = em.find(Card.class, id);
-            em.remove(card);
+            if (card != null){
+                card.getPacks().forEach(pack -> pack.getCards().remove(card));
+                em.remove(card);
+            }
             em.getTransaction().commit();
+        } finally {
+            emf.close();
         }
 
     }
