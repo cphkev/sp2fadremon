@@ -106,7 +106,7 @@ public class PackController {
                 return;
             }
 
-            for(CardDTO card : pack.getCards()){
+            for(Card card : pack.getCards()){
                 packDAO.delete(card.getId());
             }
 

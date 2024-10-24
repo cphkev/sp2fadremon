@@ -31,11 +31,12 @@ Content-Type: application/json
 ###
 POST {{URL}}/packs
 Content-Type: application/json
+Authorization: Bearer {{jwt_token}}
 
 {
   "name": "Test Pack",
   "price": 200,
-  "description": "Test Description"
-
+  "description": "Test Description",
+  "cards": [{}]
 }
 ###
