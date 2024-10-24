@@ -47,6 +47,10 @@ public class Pack {
         this.cards = cards;
     }
 
+    public Pack(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     public void addCard(Card card){
         if(card != null) {

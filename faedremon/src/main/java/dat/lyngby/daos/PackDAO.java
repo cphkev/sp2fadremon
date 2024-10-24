@@ -39,7 +39,7 @@ public class PackDAO implements IDAO<PackDTO,Integer> {
     public PackDTO create(PackDTO packDTO) {
         try(EntityManager em = emf.createEntityManager()){
             em.getTransaction().begin();
-            Pack pack = new Pack(packDTO);
+            Pack pack = packDTO.toEntity();
             em.persist(pack);
             em.getTransaction().commit();
             return new PackDTO(pack);
